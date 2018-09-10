@@ -1,0 +1,328 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use DB;
+use Auth;
+use App\User;
+use App\Models\Projects;
+use App\Models\AccessProjects;
+use App\Models\UsersProjects;
+use App\Models\Clients;
+use App\Http\Controllers\Session;
+
+class ProjectsController extends Controller
+{
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $status
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $projects = DB::table('clients')
+                    ->LeftJoin('projects', 'projects.client_id', '=', 'clients.id')
+                    ->LeftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
+                    ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
+                    ->where("projects.status", "=", 1)
+                    ->orWhere("projects.status", "=", 0 )
+                    ->select('clients.*', 'projects.*', 'users_projects.*', 'users.*', 'projects.id as proj_projid', 'projects.status as proj_projstatus')
+                    ->paginate(20);
+
+        return view('admin.projects.index', compact('projects', 'users_projects'));
+                //->with('i',(request()->input('page',1)-1) *20);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $clients = Clients::select(['id', 'companyname'])
+                        ->pluck('companyname', 'id');
+        $users = User::select(['id','firstname'])
+                        ->where('role_id', 1)
+                        ->orWhere('role_id', 2)
+                        ->pluck('firstname', 'id');
+
+                        // dd($managers);
+        return view('admin.projects.crud.create', compact('users', 'clients'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+//dd($request);
+
+        $validatedData = $request->validate([
+            'client_id'     => 'required',
+            'name'          => 'required|max:255',
+            'user_id'       => 'required',
+            'access_data'   => 'required',
+
+        ]);
+
+//dd($validatedData);
+        $projects = Projects::create([
+            'name' => $request['name'],
+            'client_id' => $request['client_id'],
+            'user_id' => $request['user_id'],
+            'due_date' => $request['due_date'],
+            'descriptive_title' => $request['descriptive_title'],
+            'project_url' => $request['project_url'],
+            //'project_url_test' => $request['project_url_test'],
+            'total_budget' => $request['total_budget'],
+            'description' => $request['description'],
+            'send_email_notification' => $request['send_email_notification'],
+        ]);
+
+        if($request['access_data']){
+            AccessProjects::create([
+                'project_id' => $projects->id,
+                'data' => $request['access_data'],
+            ]);
+        }
+
+        UsersProjects::create([
+            'project_id' => $projects->id,
+            'user_id' => $request['user_id'],
+        ]);
+
+
+        return redirect()->route('projects.index')
+                ->with('success', 'Thank you, new project created successfully!');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $project =  DB::table('projects')
+                        ->where('id', $id)
+                        ->get();
+
+        $users = User::select(['id','firstname'])
+                        ->where('role_id', 1)
+                        ->orWhere('role_id', 2)
+                        ->pluck('firstname', 'id');
+
+        $clients = Clients::select(['id', 'companyname'])
+                        ->pluck('companyname', 'id');
+
+        $proj =  Projects::find($id);
+
+        $access_data = DB::table('access_projects')
+            ->where('project_id', $id)
+            ->get();
+        /*if (!$access_data->count() ) {
+            $a = "null";
+        } else {
+            $a = "full";
+        }*/
+//dd($a);
+        /*if($request['access_data']){
+            AccessProjects::create([
+                'project_id' => $projects->id,
+                'data' => $request['access_data'],
+            ]);
+        }*/
+
+
+        return view('admin.projects.crud.edit', compact('project', 'users', 'clients','proj', 'access_data'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+
+        $validatedData = $request->validate([
+            'client_id'     => 'required',
+            'name'          => 'required|max:255',
+            'user_id'       => 'required',
+            'access_data'   => 'required',
+
+        ]);
+         $request = $request->all();
+         //dd($request);
+        $projects = Projects::find($id)->update([
+            'name' => $request['name'],
+            'client_id' => $request['client_id'],
+            'user_id' => $request['user_id'],
+            'due_date' => $request['due_date'],
+            'descriptive_title' => $request['descriptive_title'],
+            'project_url' => $request['project_url'],
+            //'project_url_test' => $request['project_url_test'],
+            'total_budget' => $request['total_budget'],
+            'description' => $request['description'],
+            'send_email_notification' => $request['send_email_notification'],
+        ]);
+
+
+        DB::table('users_projects')
+            ->where('project_id', $id)
+            ->update(array(
+                'project_id' => $id,
+                'user_id' => $request['user_id'],
+            ));
+
+
+        if($request['access_data']){
+            //dd('access');
+            /*AccessProjects::create([
+                'project_id' => $projects->id,
+                'data' => $request['access_data'],
+            ]);*/
+
+
+
+//dd($id);
+            $a = DB::table('access_projects')
+                ->where('project_id', $id)
+                ->get();
+
+
+//dd($a);
+            if ($a->count()) {
+                //dd("update");
+                DB::table('access_projects')
+                    ->where('project_id', $id)
+                    ->update(array(
+                        'project_id' => $id,
+                        'data' => $request['access_data'],
+                    ));
+            } else {
+                //dd("create");
+                AccessProjects::create([
+                    'project_id' => $id,
+                    'data' => $request['access_data'],
+                ]);
+            }
+        }
+
+
+
+        return redirect()->route('projects.index')
+                ->with('success', 'Thank you, new project updated successfully!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+
+        //dd($id);
+        //Projects::find($id)->update(['status'=> 1]);
+
+
+//dd($id);
+        DB::table('projects')
+            ->where('user_id', $id)
+            ->delete();
+        //Projects::find($id)->flush();
+        //flush($project);
+
+        return redirect()->route('projects.index')
+                ->with('success','Project deleted successfully.');
+
+
+
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getProjects($id) {
+        $projects = Projects::where("client_id",$id)->pluck("name","id");
+
+       return json_encode($projects);
+
+   }
+
+   /**
+    * Show the form for editing the specified resource.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+   public function comments($id)
+   {
+       $project = DB::table('projects')
+                       ->where('id', $id)
+                       ->get();
+
+       $users = User::select(['id','firstname'])
+                       ->where('role_id', 1)
+                       ->pluck('firstname', 'id');
+
+       $clients = Clients::select(['id', 'companyname'])
+                       ->pluck('companyname', 'id');
+
+
+       return view('admin.projects.comments', compact('project', 'users', 'clients'));
+   }
+
+
+    public function doneProj(Projects $proj) {
+        //dd($task->status);
+        if ($proj->status == 0) {
+            $proj->update(['status'=>1]);
+            DB::table('users_tasks')
+                ->where('task_id', $proj->id)
+                ->update(array(
+                    'status' => 1,
+                ));
+        } else {
+            $proj->update(['status'=>0]);
+            DB::table('users_tasks')
+                ->where('task_id', $proj->id)
+                ->update(array(
+                    'status' => 0,
+                ));
+        }
+
+        //dd('ok');
+
+        //return view('admin.tasks.index');
+        return $this->index();
+
+
+    }
+}
