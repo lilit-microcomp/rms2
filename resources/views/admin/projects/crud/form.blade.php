@@ -43,8 +43,7 @@
             <label for="due_date" class="col-md-4 col-form-label text-md-right">Due date</label>
 
             <div class="col-md-6">
-                {!! Form::text('due_date', null, array('name' => 'due_date', 'placeholder' => 'Due date', 'class' => 'form-control', 'id' => 'datepicker-end')) !!}
-
+                {!! Form::text('due_date', null, $errors->has('due_date') ? array('name' => 'due_date', 'placeholder' => 'Due date', 'class' => 'form-control is-invalid', 'id' => 'datepicker-end') : array('placeholder' => 'Due date', 'class' => 'form-control', 'id' => 'datepicker-end')) !!}
                 @if ($errors->has('due_date'))
                     <span class="invalid-feedback">
                         <strong>{{ $errors->first('due_date') }}</strong>
@@ -128,12 +127,13 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
+        <div style="width: 570px;">
+            <label for="description" class="col-form-label text-md-right">Description</label>
 
-            <div class="col-md-6">
-                {!! Form::textarea('description', null, array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control', 'id' => 'description')) !!}
-                @if ($errors->has('description'))
+            <div>
+                {!! Form::textarea('description', null, $errors->has('description') ? array('placeholder' => 'Description','size' => '200x5', 'class' => 'form-control is-invalid', 'id' => 'description') : array('placeholder' => 'Description','size' => '200x5', 'class' => 'form-control', 'id' => 'description')) !!}
+
+            @if ($errors->has('description'))
                     <span class="invalid-feedback">
                         <strong>{{ $errors->first('description') }}</strong>
                     </span>
@@ -141,16 +141,17 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <label for="access_data" class="col-md-4 col-form-label text-md-right">Access Data</label>
+        <div style="width: 570px;">
+            <label for="access_data" class="col-form-label text-md-right">Access Data</label>
 
-            <div class="col-md-6">
-                {!! Form::textarea('access_data', isset($access_data) && $access_data->count() ? $access_data[0]->data : "", null, $errors->has('access_data') ? ['placeholder' => 'Access Data','size' => '25x5', 'class' => 'form-control is-invalid', 'id' => 'access_data'] : ['placeholder' => 'Access Data','size' => '25x5', 'class' => 'form-control', 'id' => 'access_data'] ) !!}
-                @if ($errors->has('access_data'))
+            <div>
+                {!! Form::textarea('access_data', isset($access_data) && $access_data->count() ? $access_data[0]->data : null, $errors->has('access_data') ? array('placeholder' => 'Access Data','size' => '200x5', 'class' => 'form-control is-invalid', 'id' => 'access_data') : array('placeholder' => 'Access Data','size' => '200x5', 'class' => 'form-control', 'id' => 'access_data') ) !!}
+
+            @if ($errors->has('access_data'))
                     <span class="invalid-feedback">
                         <strong>{{ $errors->first('access_data') }}</strong>
                     </span>
-                @endif
+            @endif
 
             </div>
         </div>

@@ -167,10 +167,14 @@
                 {!! Form::model($task, ['method' => 'POST','route' => ['tasks.saveAccessData', $task[0]->task_id]]) !!}
 
                     <div class="form-group row">
+                        <div class="col-md-12">
+                            {{$acc}}
+                        </div>
                         <label for="data" class="col-md-4 col-form-label text-md-right">Access Data</label>
 
                         <div class="col-md-6">
-                            {!! Form::textarea('data', $acc, isset($access_data[0]->data) && $access_data[0]->data != null ? array('size' => '30x5', 'class' => 'form-control', 'id' => 'data') : array('placeholder' => 'Data','size' => '30x5', 'class' => 'form-control', 'id' => 'data')) !!}
+
+                            {!! Form::textarea('data', null, isset($access_data[0]->data) && $access_data[0]->data != null ? array('size' => '30x5', 'class' => 'form-control', 'id' => 'data') : array('placeholder' => 'Data','size' => '30x5', 'class' => 'form-control', 'id' => 'data')) !!}
                             @if ($errors->has('data'))
                                 <span class="invalid-feedback">
                                     <strong>{{ $errors->first('data') }}</strong>

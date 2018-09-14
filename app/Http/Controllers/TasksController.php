@@ -16,6 +16,7 @@ use App\Models\AccessProjects;
 use App\Models\Comments;
 use App\User;
 use DB;
+use Mail;
 use Session;
 
 
@@ -52,7 +53,7 @@ class TasksController extends Controller
             ->LeftJoin('tasks', 'projects.id', '=', 'tasks.project_id')
             ->LeftJoin('users_tasks', 'tasks.id', '=', 'users_tasks.task_id')
             ->LeftJoin('clients', 'projects.client_id', '=', 'clients.id')
-            ->select('projects.*', 'tasks.*', 'tasks.id as task_taskid', 'tasks.status as task_taskstatus', 'users_tasks.*', 'clients.*')
+            ->select('projects.*', 'tasks.*', 'users_tasks.*', 'clients.*', 'tasks.id as task_taskid', 'tasks.status as task_taskstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
             ->where("tasks.status", "=", 1 )
             ->orWhere("tasks.status", "=", 0 )
             ->paginate(20);
@@ -117,6 +118,8 @@ class TasksController extends Controller
             'team_lead_id' => $request['team_lead_id'],
             'task_id' => $tasks->id,
         ]);
+
+
 
         return redirect()->route('tasks.index')
             ->with('success', 'Tasks created successfully.');
@@ -575,12 +578,12 @@ if (isset($access_data) && !empty($access_data[0])) {
             ->LeftJoin('tasks', 'tasks.project_id', '=', 'projects.id')
             ->where('tasks.id', '=', $task_id)
             ->get();
-
+        //dd($access[0]->data);
         DB::table('access_projects')
             ->where('id', $access[0]->id)
             ->update(array(
                 //'project_id' => $request['project_id'],
-                'data' => $request['data'],
+                'data' => $access[0]->data . " " . $request['data'],
             ));
 
         return back();

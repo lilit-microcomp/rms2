@@ -4,7 +4,7 @@
             <label for="firstname" class="col-md-4 col-form-label text-md-right">First Name</label>
 
             <div class="col-md-6">
-                <!-- <input id="firstname" type="text" class="form-control{{ $errors->has('firstname') ? ' is-invalid' : '' }}" name="firstname" value="{{ old('firstname') }}" required autofocus> -->
+            <!-- <input id="firstname" type="text" class="form-control{{ $errors->has('firstname') ? ' is-invalid' : '' }}" name="firstname" value="{{ old('firstname') }}" required autofocus> -->
                 {!! Form::text('firstname', null, $attributes = $errors->has('firstname') ? array('placeholder' => 'Firstname', 'class' => 'form-control is-invalid') : array('placeholder' => 'Firstname', 'class' => 'form-control')) !!}
                 @if ($errors->has('firstname'))
                     <span class="invalid-feedback">
@@ -19,7 +19,7 @@
             <label for="lastname" class="col-md-4 col-form-label text-md-right">Last Name</label>
 
             <div class="col-md-6">
-                <!-- <input id="lastname" type="text" class="form-control{{ $errors->has('lastname') ? ' is-invalid' : '' }}" name="lastname" value="{{ old('lastname') }}" required autofocus> -->
+            <!-- <input id="lastname" type="text" class="form-control{{ $errors->has('lastname') ? ' is-invalid' : '' }}" name="lastname" value="{{ old('lastname') }}" required autofocus> -->
                 {!! Form::text('lastname', null, $attributes = $errors->has('lastname') ? array('placeholder' => 'Lastname', 'class' => 'form-control is-invalid') : array('placeholder' => 'Lastname', 'class' => 'form-control')) !!}
                 @if ($errors->has('lastname'))
                     <span class="invalid-feedback">
@@ -33,7 +33,7 @@
             <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
 
             <div class="col-md-6">
-                <!-- <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required> -->
+            <!-- <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required> -->
                 {!! Form::email('email', null, $attributes = $errors->has('email') ? array('placeholder' => 'Email', 'class' => 'form-control is-invalid') : array('placeholder' => 'Email', 'class' => 'form-control')) !!}
                 @if ($errors->has('email'))
                     <span class="invalid-feedback">
@@ -47,7 +47,7 @@
             <label for="role" class="col-md-4 col-form-label text-md-right">Administrative Rights</label>
 
             <div class="col-md-6">
-                <!--<select id="role" class="form-control{{ $errors->has('role') ? ' is-invalid' : '' }}" name="role" value="{{ old('role') }}" required>
+            <!--<select id="role" class="form-control{{ $errors->has('role') ? ' is-invalid' : '' }}" name="role" value="{{ old('role') }}" required>
                     <option value="" selected disabled>Choose</option>
                     <option value="admin">Administrator</option>
                     <option value="prmanager">Project Manager</option>
@@ -55,12 +55,14 @@
                     <option value="team_lead">Team Lead</option>
                 </select>-->
 
-                    {{ Form::select('role', $roles, null, ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
+                {{ Form::select('role', $roles, null, $errors->has('role') ? array('placeholder' => 'Please select ...', 'class' => 'form-control is-invalid') : array('placeholder' => 'Please select ...', 'class' => 'form-control')) }}
 
 
                 @if ($errors->has('role'))
-                        <option class="invalid-feedback" value="">{{ $errors->first('email') }}</option>
-                    @endif
+                    <span class="invalid-feedback">
+                        <strong>{{ $errors->first('role') }}</strong>
+                    </span>
+                @endif
 
             </div>
         </div>
@@ -68,7 +70,7 @@
         <div class="form-group row">
             <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
             <div class="col-md-6">
-                <!-- <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required> -->
+            <!-- <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required> -->
                 {!! Form::password('password', $attributes = $errors->has('password') ? array('placeholder' => 'Password', 'class' => 'form-control is-invalid') : array('placeholder' => 'Password', 'class' => 'form-control', 'required')) !!}
                 @if ($errors->has('password'))
                     <span class="invalid-feedback">

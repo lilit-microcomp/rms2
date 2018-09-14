@@ -88,17 +88,16 @@
                   {{ $project->descriptive_title }}<br>
               @endif
               @if ($project->proj_projstatus == 1)
-                      <span style="color: #CCCCCC"><a href="{{ $project->project_url }}">{{ $project->project_url }}</a></span>
+                  <span style="color: #CCCCCC"><a href="//{{ $project->project_url }}" target="_blank">{{ $project->project_url }}</a></span>
               @else
-                  <a href="{{ $project->project_url }}">{{ $project->project_url }}</a>
+                  <a href="//{{ $project->project_url }}" target="_blank">{{ $project->project_url }}</a>
               @endif
           </th>
           <th>
               @if ($project->proj_projstatus == 1)
                   <span style="color: #CCCCCC">{{ $project->firstname }}</span>
               @else
-              {{ $project->firstname }}
-
+                  {{ $project->firstname }}
               @endif
           </th>
           <td>
@@ -116,14 +115,14 @@
               {!! Form::close() !!}-->
 
               @if ($project->proj_projstatus == 0)
-                  <a class="btn btn-xs btn-primary" href="{{ route('support.edit', $project->project_id) }}"><i class="fa fa-edit"></i></a>
+                  <a class="btn btn-xs btn-primary" href="{{ route('projects.edit', $project->project_id) }}"><i class="fa fa-edit"></i></a>
               @endif
 
 
 
             {!! Form::open(['method' => 'DELETE', 'route' => ['projects.destroy', $project->id], 'style'=> 'display:inline']) !!}
                 <!--{!! Form::submit('Delete',['class'=> 'btn btn-xs btn-danger']) !!}-->
-              <input type="submit" value="&#xf1f8" class="fa fa-trash" style="color: red; font-size: 18px; margin-bottom: 0;">
+                <input type="submit" value="&#xf1f8" class="fa fa-trash" style="color: red; font-size: 18px; margin-bottom: 0;">
             {!! Form::close() !!}
           </td>
         </tr>

@@ -84,14 +84,14 @@ class UsersController extends Controller
 
 
 
-        Mail::send('emails.demo', array('email'=>Input::get('email'), 'password'=>Input::get('password')), function($message){
+        Mail::send('emails.demo', array('firstname'=>Input::get('firstname'), 'password'=>Input::get('password')), function($message){
             $message->to(Input::get('email'), Input::get('firstname').' '.Input::get('lastname'))->subject('Micro-comp LLC registeration info');
         });
 
 
 
         return redirect()->route('users.index')
-                ->with('success', 'User created successfully.');
+            ->with('success', 'User created successfully.');
     }
 
     /**

@@ -24,8 +24,12 @@ header for admin
               <li class="nav-item">
                   <a class="nav-link" href="{{ route('projects.index') }}">  Projects<span class="dropdown-toggle" style="font-size: 14px; color: black; margin-left: 5px;"></span></a>
                   <ul>
-                      <li><a class="nav-link" href="{{ route('projects.index') }}">Projects sub</a></li>
+                      <li><a class="nav-link" href="{{ route('projects.create') }}">Add a New Project</a></li>
+                      <li><a class="nav-link" href="{{ route('projects.index') }}">All Projects</a></li>
+                      <li><a class="nav-link" href="{{ route('projects.index') }}">Open Projects</a></li>
+                      <li><a class="nav-link" href="{{ route('projects.index') }}">Closed Projects</a></li>
                   </ul>
+
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="{{ route('tasks.index') }}">Tasks<span class="dropdown-toggle" style="font-size: 14px; color: black; margin-left: 5px;"></span></a>

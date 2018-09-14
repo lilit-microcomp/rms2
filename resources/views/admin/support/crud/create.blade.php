@@ -26,6 +26,7 @@
                         <script type="text/javascript" src="{!! URL::asset('js/admin/support/crud/index.js') !!}"></script>
 
                         <div class="row">
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label for="firstname" class="col-md-4 col-form-label text-md-right">Choose client</label>
@@ -60,7 +61,7 @@
                                     <label for="due_date" class="col-md-4 col-form-label text-md-right">Cycle Date</label>
 
                                     <div class="col-md-6">
-                                        {!! Form::text('due_date', null, array('name' => 'due_date', 'placeholder' => 'Cycle Date', 'class' => 'form-control', 'id' => 'datepicker-end')) !!}
+                                        {!! Form::text('due_date', null, $errors->has('due_date') ? array('name' => 'due_date', 'placeholder' => 'Cycle Date', 'class' => 'form-control is-invalid', 'id' => 'datepicker-end') : array('name' => 'due_date', 'placeholder' => 'Cycle Date', 'class' => 'form-control', 'id' => 'datepicker-end')) !!}
 
                                         @if ($errors->has('due_date'))
                                             <span class="invalid-feedback">
@@ -76,7 +77,7 @@
                                     <label for="team_lead_id" class="col-md-4 col-form-label text-md-right">Choose team lead</label>
 
                                     <div class="col-md-6">
-                                        {{ Form::select('team_lead_id', $lead_user, null, ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
+                                        {{ Form::select('team_lead_id', $lead_user, null, $errors->has('team_lead_id') ? ['placeholder' => 'Please select ...', 'class' => 'form-control is-invalid'] : ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
 
                                         @if ($errors->has('team_lead_id'))
                                             <span class="invalid-feedback">
@@ -138,7 +139,7 @@
                                     <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
 
                                     <div class="col-md-6">
-                                        {!! Form::textarea('description', null, array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control', 'id' => 'description')) !!}
+                                        {!! Form::textarea('description', null, $errors->has('description') ? array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control is-invalid', 'id' => 'description') : array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control is-invalid', 'id' => 'description')) !!}
                                         @if ($errors->has('description'))
                                             <span class="invalid-feedback">
                                                 <strong>{{ $errors->first('description') }}</strong>
@@ -151,8 +152,9 @@
                                     <label for="access_data" class="col-md-4 col-form-label text-md-right">Access Data</label>
 
                                     <div class="col-md-6">
-                                        {!! Form::textarea('access_data', null, array('placeholder' => 'Access Data','size' => '30x5', 'class' => 'form-control', 'id' => 'access_data')) !!}
-                                        @if ($errors->has('access_data'))
+                                        {!! Form::textarea('access_data', null, $errors->has('access_data') ? array('placeholder' => 'Access Data','size' => '30x5', 'class' => 'form-control is-invalid', 'id' => 'access_data') : array('placeholder' => 'Access Data','size' => '30x5', 'class' => 'form-control', 'id' => 'access_data')) !!}
+
+                                    @if ($errors->has('access_data'))
                                             <span class="invalid-feedback">
                                                 <strong>{{ $errors->first('access_data') }}</strong>
                                             </span>

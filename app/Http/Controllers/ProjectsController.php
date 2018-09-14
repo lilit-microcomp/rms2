@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
+use Mail;
 use App\User;
-use App\Models\Projects;
-use App\Models\AccessProjects;
-use App\Models\UsersProjects;
 use App\Models\Clients;
+use App\Models\Projects;
+use App\Models\UsersProjects;
+use App\Models\AccessProjects;
 use App\Http\Controllers\Session;
+use Illuminate\Support\Facades\Input;
+use Symfony\Component\Console\Helper\Table;
 
 class ProjectsController extends Controller
 {
@@ -29,7 +32,7 @@ class ProjectsController extends Controller
                     ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
                     ->where("projects.status", "=", 1)
                     ->orWhere("projects.status", "=", 0 )
-                    ->select('clients.*', 'projects.*', 'users_projects.*', 'users.*', 'projects.id as proj_projid', 'projects.status as proj_projstatus')
+                    ->select('clients.*', 'projects.*', 'users_projects.*', 'users.*', 'projects.id as proj_projid', 'projects.status as proj_projstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
                     ->paginate(20);
 
         return view('admin.projects.index', compact('projects', 'users_projects'));
@@ -65,10 +68,15 @@ class ProjectsController extends Controller
 //dd($request);
 
         $validatedData = $request->validate([
-            'client_id'     => 'required',
-            'name'          => 'required|max:255',
-            'user_id'       => 'required',
-            'access_data'   => 'required',
+            'name'              => 'required|max:255',
+            'client_id'         => 'required',
+            'user_id'           => 'required',
+            'due_date'          => 'required',
+            'descriptive_title' => 'required',
+            'project_url'       => 'required',
+            'total_budget'      => 'required',
+            'description'       => 'required',
+            'access_data'       => 'required',
 
         ]);
 
@@ -97,6 +105,33 @@ class ProjectsController extends Controller
             'project_id' => $projects->id,
             'user_id' => $request['user_id'],
         ]);
+
+
+
+        //dd($user[0]->email);
+//dd($request['due_date']);
+
+        if ($request['send_email_notification'] == "1") {
+            //dd('yes');
+
+            $pm_id = Input::get('user_id');
+            $user = User::select('users')
+                ->where('id', $pm_id)
+                ->select('users.*')
+                ->get();
+
+            Mail::send('emails.proj_create_pm', array('name'=>$user[0]->firstname, 'deadline'=>$user[0]->due_date, 'description'=>$user[0]->description), function($message){
+
+                //$a = $pm_id;
+                $pm_id = Input::get('user_id');
+                $user = User::select('users')
+                    ->where('id', $pm_id)
+                    ->select('users.*')
+                    ->get();
+
+                $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+            });
+        }
 
 
         return redirect()->route('projects.index')
@@ -167,10 +202,15 @@ class ProjectsController extends Controller
     {
 
         $validatedData = $request->validate([
-            'client_id'     => 'required',
-            'name'          => 'required|max:255',
-            'user_id'       => 'required',
-            'access_data'   => 'required',
+            'name'              => 'required|max:255',
+            'client_id'         => 'required',
+            'user_id'           => 'required',
+            'due_date'          => 'required',
+            'descriptive_title' => 'required',
+            'project_url'       => 'required',
+            'total_budget'      => 'required',
+            'description'       => 'required',
+            'access_data'       => 'required',
 
         ]);
          $request = $request->all();

@@ -49,7 +49,7 @@
                     <span style="font-size: 14px;"><b>Status:</b>&nbsp;&nbsp;<i class="fa fa-circle" style="color: #007bff;"></i></span>
                 @endif
                 <b style="margin-top: 15px;">Task Description:</b>
-                <p style="margin-top: 15px;">{{isset($support) && !empty($support[0])?  $support[0]->description : ""}}</p>
+                <p style="margin-top: 15px;">{!! isset($support) && !empty($support[0])?  $support[0]->description : ""!!}</p>
                 <hr>
             </div>
         </div>

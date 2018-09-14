@@ -86,12 +86,17 @@ class SupportController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request);
         //dd($request['access_data']);
         request()->validate([
             'client_id'     => 'required',
-            'project_url'     => 'required',
-            //'project_id'     => 'required',
+            'project_url'   => 'required',
+            'due_date'      => 'required',
+            'team_lead_id'  => 'required',
             'developer_id'  => 'required',
+            'pm_id'         => 'required',
+            'description'   => 'required',
+            'access_data'   => 'required',
 
         ]);
         //dd($request);
@@ -296,7 +301,14 @@ class SupportController extends Controller
     {
 
         request()->validate([
+            'client_id'     => 'required',
+            'project_url'   => 'required',
+            'due_date'      => 'required',
+            'team_lead_id'  => 'required',
             'developer_id'  => 'required',
+            'pm_id'         => 'required',
+            'description'   => 'required',
+            'access_data'   => 'required',
 
         ]);
         Support::find($id)->update([
