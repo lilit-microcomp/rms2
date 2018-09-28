@@ -38,7 +38,7 @@
             <label for="due_date" class="col-md-4 col-form-label text-md-right">Due date</label>
 
             <div class="col-md-6">
-                {!! Form::text('due_date', null, $errors->has('developer_id') ? ['placeholder' => 'Due date', 'class' => 'form-control is-invalid', 'id' => 'datepicker-end']: ['placeholder' => 'Due date', 'class' => 'form-control', 'id' => 'datepicker-end']) !!}
+                {!! Form::text('due_date', null, $errors->has('due_date') ? ['placeholder' => 'Due date', 'class' => 'form-control is-invalid', 'id' => 'datepicker-end']: ['placeholder' => 'Due date', 'class' => 'form-control', 'id' => 'datepicker-end']) !!}
 
                 @if ($errors->has('due_date'))
                     <span class="invalid-feedback">
@@ -67,7 +67,7 @@
             <label for="team_lead_id" class="col-md-4 col-form-label text-md-right">Choose team lead </label>
 
             <div class="col-md-6">
-                {{ Form::select('team_lead_id', $lead_user, null, ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
+                {{ Form::select('team_lead_id', $lead_user, null, $errors->has('duration') ? ['placeholder' => 'Please select ...', 'class' => 'form-control is-invalid'] : ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
 
                 @if ($errors->has('team_lead_id'))
                     <span class="invalid-feedback">
@@ -115,7 +115,7 @@
             <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
 
             <div class="col-md-6">
-                {!! Form::textarea('description', null, array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control', 'id' => 'description')) !!}
+                {!! Form::textarea('description', null, $errors->has('description') ? array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control is-invalid', 'id' => 'description') : array('placeholder' => 'Description','size' => '30x5', 'class' => 'form-control', 'id' => 'description')) !!}
                 @if ($errors->has('description'))
                     <span class="invalid-feedback">
                         <strong>{{ $errors->first('description') }}</strong>

@@ -1,6 +1,6 @@
 
 
-<li class="comment odd alt">
+<ul class="comment odd alt">
     <div class="comment-body" >
     <div style="margin-top: 5px;">
 
@@ -20,16 +20,17 @@
         <div class="reply text-right" data-comment-id = {!! $comment->id !!} >
             <a rel="nofollow" href="#add_comment" class="btn btn-primary comment-reply-link show-comment-box" data-toggle="collapse" style="width: 100px;">Reply</a>
         </div>
+        @if ($comment_id)
+            <li>
+                @foreach($comments as $comment)
+                    @if($comment->parent_id == $comment_id)
+                        @include('comments.comments_block', [
+                        'comment' => $comment,
+                        'comment_id' => $comment->id])
+                    @endif
+                @endforeach
+            </li>
+        @endif
     </div>
-</li>
-@if ($comment_id)
-    <ul>
-        @foreach($comments as $comment)
-            @if($comment->parent_id == $comment_id)
-                @include('comments.comments_block', [
-                'comment' => $comment,
-                'comment_id' => $comment->id])
-            @endif
-        @endforeach
-    </ul>
-@endif
+</ul>
+

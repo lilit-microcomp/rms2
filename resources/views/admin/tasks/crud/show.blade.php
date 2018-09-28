@@ -90,6 +90,14 @@
     .show-comment-box {
         display: block;
     }
+
+    .comment,.odd,.alt {
+        background-color: lightgrey;
+    }
+    ul li {
+        list-style-type: none!important;
+        /*margin-bottom: 20px;*/
+    }
 </style>
 
 @section('content')
@@ -273,7 +281,7 @@
 
 
                 @foreach ($task_files as $task_file)
-                    <a href="/images/{!! $task_file !!}" download> <p style="color: #007bff">{!! $task_file !!}</p> </a>
+                    <a href="/images/task/{!! $task_file !!}" download> <p style="color: #007bff">{!! $task_file !!}</p> </a>
                 @endforeach
 
         </div>

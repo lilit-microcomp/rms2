@@ -1,6 +1,13 @@
 @extends( (Auth::user()->role_id == 1) ? 'layouts.appadmin' : 'layouts.app')
 
 @section('content')
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
+<script type="text/javascript" src="{!! URL::asset('js/admin/tasks/crud/index.js') !!}"></script>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

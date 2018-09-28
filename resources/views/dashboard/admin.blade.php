@@ -5,6 +5,77 @@
 <style>
 
 
+
+
+
+
+
+    .btn {
+        display: inline-block;
+    }
+    .popup {
+        position: fixed;
+        padding: 10px;
+        max-width: 500px;
+        border-radius: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background: rgba(255,255,255,.9);
+        visibility: hidden;
+        opacity: 0;
+        /* "delay" the visibility transition */
+        -webkit-transition: opacity .5s, visibility 0s linear .5s;
+        transition: opacity .5s, visibility 0s linear .5s;
+        z-index: 1;
+    }
+    .popup:target {
+        visibility: visible;
+        opacity: 1;
+        /* cancel visibility transition delay */
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+    }
+    .popup-close {
+        position: absolute;
+        padding: 10px;
+        max-width: 500px;
+        border-radius: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background: rgba(255,255,255,.9);
+    }
+
+
+
+    .close-popup {
+        background: rgba(0,0,0,.7);
+        cursor: default;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        visibility: hidden;
+        /* "delay" the visibility transition */
+        -webkit-transition: opacity .5s, visibility 0s linear .5s;
+        transition: opacity .5s, visibility 0s linear .5s;
+    }
+    .popup:target + .close-popup{
+        opacity: 1;
+        visibility: visible;
+        /* cancel visibility transition delay */
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+    }
+
+
+
+
+
+
     /*open and close task's details*/
     .taskNotesDetails {
         width: 100%;
@@ -49,7 +120,7 @@
         background-color:green;*/
     }
 
-    .clicker:focus + .hiddendiv{
+    .clicker:checked + .hiddendiv{
         display:block;
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
@@ -129,10 +200,12 @@
                                 <i class="fa fa-edit" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
                             </a>
                         @endif
-                        <div class="clicker" tabindex="1" style="float: left; margin-left: 2px;"><i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i></div>
-                        <div class="hiddendiv"><div class="sub">
-
-                                {!! Form::open(array('route' => 'fileUpload','enctype' => 'multipart/form-data')) !!}
+                        <!--<div class="clicker" tabindex="1" style="float: left; margin-left: 2px;"><i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i></div>-->
+                            <a href="#popup{{$task->id}}" class="btn" style="float: left; margin-left: -10px; margin-right: -10px; margin-top: -6px;">
+                                <i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>
+                            </a>
+                            <div id="popup{{$task->id}}" class="popup">
+                                {!! Form::open(array('route' => ['fileUploadTaskDash', $task->id],'enctype' => 'multipart/form-data')) !!}
 
 
 
@@ -145,8 +218,19 @@
                                     </div>
                                 </div>
                                 {!! Form::close() !!}
+                            </div>
+                            <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
 
-                        </div></div>
+
+
+
+
+
+                        <!--<div class="hiddendiv"><div class="sub">
+
+
+
+                        </div></div>-->
 
                          <div class="clicker" tabindex="1" style="float: left; margin-left: 2px;"><i class="fa fa-download" style="font-size: 12px; color: #007bff; cursor: pointer;" title="show access data"></i></div>
                          <div class="hiddendiv"><div class="sub">
@@ -264,7 +348,44 @@
                                 <i class="fa fa-edit" style="font-size: 12px; color: #007bff"></i>
                             </a>
                         @endif
-                        <i class="fa fa-upload" style="font-size: 12px; color: #007bff; float: left;"></i>
+
+
+
+
+
+
+                        <a href="#popupS{{$support->support_id}}" class="btn" style="float: left; margin-left: -10px; margin-right: -10px; margin-top: -6px;">
+                            <i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>
+                        </a>
+                        <div id="popupS{{$support->support_id}}" class="popup">
+
+                            {!! Form::open(array('route' => ['fileUploadSuppDash', $support->support_id],'enctype' => 'multipart/form-data')) !!}
+
+
+
+                            <div class=" cancel"> <!-- row -->
+                                <div class="col-md-4">
+                                    {!! Form::file('image', array('class' => 'image')) !!}
+                                </div><br>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">Upload</button>
+                                </div>
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                        <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+
+
+
+
+
+
+
+
+
+
+
+                        <!--<i class="fa fa-upload" style="font-size: 12px; color: #007bff; float: left;"></i>-->
                         <a href="support/{{ $support->support_id }}" title="show support" style="float: left; margin-left: 2px;"> <i class="fa fa-download" style="font-size: 12px; color: #007bff"></i> </a>
 
 

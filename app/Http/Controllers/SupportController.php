@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 
 use DB;
 use Auth;
+use Mail;
+use Session;
 use App\User;
 use App\Models\Clients;
 use App\Models\Support;
 use App\Models\Projects;
 use App\Models\Comments;
 use App\Models\UsersSupport;
+use Illuminate\Support\Facades\Input;
 use App\Helpers\Contracts\CommentInterface;
 
 
@@ -74,6 +77,7 @@ class SupportController extends Controller
             ->pluck('firstname', 'id');
         $pm_user = User::select(['id','firstname'])
             ->where('role_id', 2)
+            ->orWhere('role_id', 1)
             ->pluck('firstname', 'id');
         return view('admin.support.crud.create', compact('clients', 'users', 'lead_user', 'dev_user', 'pm_user'));
     }
@@ -107,6 +111,7 @@ class SupportController extends Controller
             'duration' => $request['duration'],
             'description' => $request['description'],
             'access_data' => $request['access_data'],
+            'searchable_words[' => $request['project_url'] . " " . $request['description'] . " " . $request['client_id'],
             'send_email_notification' => $request['send_email_notification'],
         ]);
         // dd($request['developer_id']);
@@ -117,6 +122,56 @@ class SupportController extends Controller
             'support_id' => $support->id,
             'pm_id' => $request['pm_id'],
         ]);
+
+
+
+        $pm_id = Input::get('pm_id');
+        $dev_id = Input::get('developer_id');
+        $lead_id = Input::get('team_lead_id');
+
+        $pm = User::select('users')
+            ->where('id', $pm_id)
+            ->select('users.*')
+            ->get();
+        $dev = User::select('users')
+            ->where('id', $dev_id)
+            ->select('users.*')
+            ->get();
+        $lead = User::select('users')
+            ->where('id', $lead_id)
+            ->select('users.*')
+            ->get();
+
+        Mail::send('emails.supp_create', array('name'=>$pm[0]->firstname, 'proj_url'=>$request['project_url']), function($message){
+            //$a = $pm_id;
+            $pm_id = Input::get('pm_id');
+            $user = User::select('users')
+                ->where('id', $pm_id)
+                ->select('users.*')
+                ->get();
+            $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+        });
+
+        Mail::send('emails.supp_create', array('name'=>$dev[0]->firstname, 'proj_url'=>$request['project_url']), function($message){
+            //$a = $pm_id;
+            $dev_id = Input::get('developer_id');
+            $user = User::select('users')
+                ->where('id', $dev_id)
+                ->select('users.*')
+                ->get();
+            $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+        });
+
+        Mail::send('emails.supp_create', array('name'=>$lead[0]->firstname, 'proj_url'=>$request['project_url']), function($message){
+            //$a = $pm_id;
+            $lead_id = Input::get('team_lead_id');
+            $user = User::select('users')
+                ->where('id', $lead_id)
+                ->select('users.*')
+                ->get();
+            $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+        });
+
 
         return redirect()->route('support.index')
                 ->with('success', 'Support created successfully.');
@@ -162,6 +217,16 @@ class SupportController extends Controller
 
         $supports = Support::find($id);
 
+        $support_files = DB::table('support')
+            ->where('id', $id)
+            ->select('files')
+            ->get();
+
+        $support_files = (explode(",", $support_files[0]->files));
+        unset($support_files[0]);
+
+        $destinationPath = public_path('/images/support');
+
         /*$users_projects = DB::table('users_projects')
             ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
             ->get();
@@ -172,7 +237,7 @@ class SupportController extends Controller
 
         $all_commentID = $this->comment_inteface->all_comments;
 
-        return view('admin.support.crud.show', compact('support', 'users', 'users_projects', 'clients', 'supports', 'all_commentID', 'access_data'))
+        return view('admin.support.crud.show', compact('support', 'users', 'users_projects', 'clients', 'supports', 'all_commentID', 'access_data', 'support_files', 'destinationPath'))
             ->with([
                 'i' => (request()->input('page',1)-1) *20,
                 'comments' => $this->comment_inteface->all_comments,
@@ -205,6 +270,7 @@ class SupportController extends Controller
             ->pluck('firstname', 'id');
         $pm_user = User::select(['id','firstname'])
             ->where('role_id', 2)
+            ->orWhere('role_id', 1)
             ->pluck('firstname', 'id');
 //dd($users);
 
@@ -483,6 +549,40 @@ class SupportController extends Controller
         //return view('admin.tasks.index');
         return $this->index();
 
+
+    }
+
+
+
+
+
+    public function fileUploadSupp(Request $request) {
+//dd('barev');
+        $image = $request->file('image');
+        $value = Session::get('_previous')['url'];
+        $value = (explode("/",$value));
+
+        $supp_id = (int)$value[4];
+
+        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
+
+        $destinationPath = public_path('/images/support');
+
+        $image->move($destinationPath, $input['imagename']);
+
+        $files = DB::table('support')
+            ->where('id', $supp_id)
+            ->select('files')
+            ->get();
+        //$a = $files[0]->files ."asdfg;";
+        //dd($a);
+        DB::table('support')
+            ->where('id', $supp_id)
+            ->update(array(
+                'files' => $files[0]->files . "," . $input['imagename'],
+            ));
+
+        return back()->with('success','Image Upload successful');
 
     }
 

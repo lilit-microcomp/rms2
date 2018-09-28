@@ -66,6 +66,10 @@ Route::get('projects/{proj}/finish-proj', 'ProjectsController@doneProj');
 //////////////Route::post('home/{task}/upload', 'TasksController@fileUpload')->name('file.upload');
 
 Route::post('fileUpload', ['as'=>'fileUpload','uses'=>'TasksController@fileUpload']);
+Route::post('fileUploadTaskDash/{task_id}', ['as'=>'fileUploadTaskDash','uses'=>'HomeController@fileUploadTaskDash']);
+Route::post('fileUploadSupp', ['as'=>'fileUploadSupp','uses'=>'SupportController@fileUploadSupp']);
+Route::post('fileUploadSuppDash/{supp_id}', ['as'=>'fileUploadSuppDash','uses'=>'HomeController@fileUploadSuppDash']);
+
 //Route::post('fileUpload', ['as'=>'fileUpload','uses'=>'HomeController@fileUpload']);
 //Route::post('fileUpload/{tasks_id}', 'TasksController@fileUpload')->name('fileUpload');;
 

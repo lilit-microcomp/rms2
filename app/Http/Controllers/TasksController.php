@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Projects;
-use Illuminate\Http\Request;
-use App\Helpers\Contracts\CommentInterface;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Support\Facades\Auth;
-
-use App\Models\Tasks;
-use App\Models\Clients;
-use App\Models\UsersTasks;
-use App\Models\AccessProjects;
-
-use App\Models\Comments;
 use App\User;
 use DB;
 use Mail;
 use Session;
+use App\Models\Tasks;
+use App\Models\Clients;
+use App\Models\Comments;
+use App\Models\Projects;
+use App\Models\UsersTasks;
+use Illuminate\Http\Request;
+use App\Models\AccessProjects;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use App\Helpers\Contracts\CommentInterface;
+use Illuminate\Contracts\Routing\ResponseFactory;
 
 
 class TasksController extends Controller
@@ -101,6 +100,10 @@ class TasksController extends Controller
             'client_id'     => 'required',
             'project_id'    => 'required',
             'developer_id'  => 'required',
+            'team_lead_id'  => 'required',
+            'due_date'      => 'required',
+            'description'   => 'required',
+            'duration'      => 'required',
 
         ]);
 //dd($request['team_lead_id']);
@@ -118,6 +121,65 @@ class TasksController extends Controller
             'team_lead_id' => $request['team_lead_id'],
             'task_id' => $tasks->id,
         ]);
+
+        $proj = DB::table('projects')
+            ->where('projects.id', $request['project_id'])
+            ->get();
+        $pm_id = $proj[0]->user_id;
+        $dev_id = Input::get('developer_id');
+        $lead_id = Input::get('team_lead_id');
+
+        $pm = User::select('users')
+            ->where('id', $pm_id)
+            ->select('users.*')
+            ->get();
+        $dev = User::select('users')
+            ->where('id', $dev_id)
+            ->select('users.*')
+            ->get();
+        $lead = User::select('users')
+            ->where('id', $lead_id)
+            ->select('users.*')
+            ->get();
+        $proj_url = Projects::select('projects')
+            ->where('projects.id', $request['project_id'])
+            ->select('projects.*')
+            ->get();
+        //dd($proj_url[0]->project_url);
+
+        Mail::send('emails.task_create', array('name'=>$pm[0]->firstname, 'proj_url'=>$proj_url[0]->project_url), function($message){
+            //$a = $pm_id;
+            //$pm_id = Input::get('pm_id');
+            $proj = DB::table('projects')
+                ->where('projects.id', Input::get('project_id'))
+                ->get();
+            $pm_id = $proj[0]->user_id;
+            $user = User::select('users')
+                ->where('id', $pm_id)
+                ->select('users.*')
+                ->get();
+            $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+        });
+        //dd('jj');
+        Mail::send('emails.task_create', array('name'=>$dev[0]->firstname, 'proj_url'=>$proj_url[0]->project_url), function($message){
+            //$a = $pm_id;
+            $dev_id = Input::get('developer_id');
+            $user = User::select('users')
+                ->where('id', $dev_id)
+                ->select('users.*')
+                ->get();
+            $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+        });
+
+        Mail::send('emails.task_create', array('name'=>$lead[0]->firstname, 'proj_url'=>$proj_url[0]->project_url), function($message){
+            //$a = $pm_id;
+            $lead_id = Input::get('team_lead_id');
+            $user = User::select('users')
+                ->where('id', $lead_id)
+                ->select('users.*')
+                ->get();
+            $message->to($user[0]->email, $user[0]->firstname.' '.$user[0]->lastname)->subject('Micro-comp LLC registeration info');
+        });
 
 
 
@@ -205,7 +267,7 @@ class TasksController extends Controller
         unset($task_files[0]);
 //dd($task_files);
 
-        $destinationPath = public_path('/images');
+        $destinationPath = public_path('/images/task');
 
         //dd($task_files);
        /* //dd($access_data);
@@ -493,7 +555,7 @@ if (isset($access_data) && !empty($access_data[0])) {
 //dd($task_id);
         $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
 
-        $destinationPath = public_path('/images');
+        $destinationPath = public_path('/images/task');
 //dd($destinationPath);
         $image->move($destinationPath, $input['imagename']);
 

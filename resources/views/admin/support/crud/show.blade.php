@@ -2,7 +2,19 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+    .show-comment-box {
+        display: block;
+    }
 
+    .comment,.odd,.alt {
+        background-color: lightgrey;
+    }
+    .comment,ul li {
+        list-style-type: none!important;
+        /*margin-bottom: 20px;*/
+    }
+</style>
 
 
 
@@ -36,7 +48,7 @@
 
                 </div>
                 @if (isset($comments) && (!empty($comments)))
-                    <div class="comments" style="border: 1px solid black; margin-top: 20px; padding: 10px;">
+                    <div class="comments" style="margin-top: 20px; padding: 10px;">
                         @include('comments.index', $comments)
                     </div>
                 @endif
@@ -51,6 +63,40 @@
                 <b style="margin-top: 15px;">Task Description:</b>
                 <p style="margin-top: 15px;">{!! isset($support) && !empty($support[0])?  $support[0]->description : ""!!}</p>
                 <hr>
+
+
+
+
+
+
+
+
+
+
+
+                    {!! Form::open(array('route' => 'fileUploadSupp','enctype' => 'multipart/form-data')) !!}
+
+
+
+                    <div class=" cancel"> <!-- row -->
+                        <div class="col-md-4">
+                            {!! Form::file('image', array('class' => 'image')) !!}
+                        </div><br>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-success">Upload</button>
+                        </div>
+                    </div>
+                    {!! Form::close() !!}
+
+
+
+                    @foreach ($support_files as $support_file)
+                        <a href="/images/support/{!! $support_file !!}" download> <p style="color: #007bff">{!! $support_file !!}</p> </a>
+                    @endforeach
+
+
+
+
             </div>
         </div>
     </div>
