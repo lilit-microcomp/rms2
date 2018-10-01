@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+//use Request;
+
 use Illuminate\Http\Request;
 
 use DB;
@@ -26,7 +28,26 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = DB::table('clients')
+        //dd('888');
+        echo "barev111";
+        $url = \Request::server('REQUEST_URI');
+        //dd($url);
+        if (strpos($url, '?') !== false) {
+            $status = explode("?",$url);
+            $status = $status[1];
+            //dd($status);
+            if($status == 1 || $status == 0) {
+                $projects = DB::table('clients')
+                    ->LeftJoin('projects', 'projects.client_id', '=', 'clients.id')
+                    ->LeftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
+                    ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
+                    ->where("projects.status", "=", $status)
+                    //->orWhere("projects.status", "=", 0 )
+                    ->select('clients.*', 'projects.*', 'users_projects.*', 'users.*', 'projects.id as proj_projid', 'projects.status as proj_projstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
+                    ->paginate(20);
+            }
+            else {
+                $projects = DB::table('clients')
                     ->LeftJoin('projects', 'projects.client_id', '=', 'clients.id')
                     ->LeftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
                     ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
@@ -34,6 +55,28 @@ class ProjectsController extends Controller
                     ->orWhere("projects.status", "=", 0 )
                     ->select('clients.*', 'projects.*', 'users_projects.*', 'users.*', 'projects.id as proj_projid', 'projects.status as proj_projstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
                     ->paginate(20);
+            }
+
+
+
+
+
+
+        } else {
+            $projects = DB::table('clients')
+                ->LeftJoin('projects', 'projects.client_id', '=', 'clients.id')
+                ->LeftJoin('users_projects', 'projects.id', '=', 'users_projects.project_id')
+                ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
+                ->where("projects.status", "=", 1)
+                ->orWhere("projects.status", "=", 0 )
+                ->select('clients.*', 'projects.*', 'users_projects.*', 'users.*', 'projects.id as proj_projid', 'projects.status as proj_projstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
+                ->paginate(20);
+        }
+
+
+
+
+
 
         return view('admin.projects.index', compact('projects', 'users_projects'));
                 //->with('i',(request()->input('page',1)-1) *20);
@@ -66,7 +109,7 @@ class ProjectsController extends Controller
     public function store(Request $request)
     {
 //dd($request);
-
+        $this->request = $request;
         $validatedData = $request->validate([
             'name'              => 'required|max:255',
             'client_id'         => 'required',

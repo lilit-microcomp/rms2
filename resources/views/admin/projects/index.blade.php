@@ -11,9 +11,9 @@
     <div class="row">
         <div class="col-md-6">
             <div class="text-left">
-                <a class="btn btn-xs btn-primary" href="{!! route('projects.index', 0) !!}">All</a>
-                <a class="btn btn-xs btn-primary" href="{!! route('projects.index', 1) !!}">Open</a>
-                <a class="btn btn-xs btn-primary" href="{!! route('projects.index', 2) !!}">Closed</a>
+                <a class="btn btn-xs btn-primary" href="{!! route('projects.index', 2) !!}">All</a>
+                <a class="btn btn-xs btn-primary" href="{!! route('projects.index', 0) !!}">Open</a>
+                <a class="btn btn-xs btn-primary" href="{!! route('projects.index', 1) !!}">Closed</a>
             </div>
         </div>
         <div class="col-md-6">
