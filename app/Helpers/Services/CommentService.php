@@ -22,6 +22,7 @@ class CommentService implements CommentInterface
    public function setAllCommentsByTypeAndId($id, $type) {
        $this->all_comments = $this->comment::where('type_page_row_id', $id)
                                             ->where('type_page', $type)
+                                            ->orderBy('id', 'DESC')
                                             ->get();
    }
 

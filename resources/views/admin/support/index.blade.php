@@ -18,7 +18,13 @@
             <div class="form-inline text-left">
                 <div class="form-group col-md-6">
                     <label for="user_id" class="bold col-md-4 col-form-label text-md-right">Choose developer: </label>
-                    {{ Form::select('user_id', $users, null, ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
+                    <select onchange="location = this.value;">
+                        <option></option>
+                        @foreach($users as $user)
+                            <option value="{!! route('support.index', $user->id) !!}"> {{$user->firstname}} </option>
+                        @endforeach
+                    </select>
+
                 </div>
             </div>
             <div class="text-right">
@@ -73,33 +79,33 @@
           <th>
 
               @foreach ($users as $key => $value)
-                  @if ($key == $supp->pm_id)
+                  @if ($value->id == $supp->pm_id)
                       @if ($supp->supp_suppstatus == 1)
-                          <span style="color: #CCCCCC">{{ $value }}</span>
+                          <span style="color: #CCCCCC">{{ $value->firstname }}</span>
                       @else
-                          {{ $value }}
+                          {{ $value->firstname }}
                       @endif
                   @endif
               @endforeach
           </th>
           <th>
               @foreach ($users as $key => $value)
-                  @if ($key == $supp->team_lead_id)
+                  @if ($value->id == $supp->team_lead_id)
                       @if ($supp->supp_suppstatus == 1)
-                          <span style="color: #CCCCCC">{{ $value }}</span>
+                          <span style="color: #CCCCCC">{{ $value->firstname }}</span>
                       @else
-                          {{ $value }}
+                          {{ $value->firstname }}
                       @endif
                   @endif
               @endforeach
           </th>
           <th>
               @foreach ($users as $key => $value)
-                  @if ($key == $supp->developer_id)
+                  @if ($value->id == $supp->developer_id)
                       @if ($supp->supp_suppstatus == 1)
-                          <span style="color: #CCCCCC">{{ $value }}</span>
+                          <span style="color: #CCCCCC">{{ $value->firstname }}</span>
                       @else
-                          {{ $value }}
+                          {{ $value->firstname }}
                       @endif
                   @endif
               @endforeach

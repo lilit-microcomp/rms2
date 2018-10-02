@@ -29,7 +29,7 @@ class ProjectsController extends Controller
     public function index()
     {
         //dd('888');
-        echo "barev111";
+        //echo "barev111";
         $url = \Request::server('REQUEST_URI');
         //dd($url);
         if (strpos($url, '?') !== false) {

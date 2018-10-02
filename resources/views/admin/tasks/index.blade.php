@@ -7,7 +7,7 @@
 <script type="text/javascript" src="{!! URL::asset('js/admin/tasks/index.js') !!}"></script>
 
 @section('content')
-
+barev
     <div class="row">
         <div class="col-lg-12">
             <h3>Tasks list</h3>
@@ -19,7 +19,14 @@
             <div class="form-inline text-left">
                 <div class="form-group col-md-6">
                     <label for="user_id" class="bold col-md-4 col-form-label text-md-right">Choose developer: </label>
-                    {{ Form::select('user_id', $users, null, ['placeholder' => 'Please select ...', 'class' => 'form-control']) }}
+
+                        <select onchange="location = this.value;">
+                            <option></option>
+                            @foreach($users as $user)
+                                <option value="{!! route('tasks.index', $user->id) !!}"> {{$user->firstname}} </option>
+                            @endforeach
+                        </select>
+
                 </div>
             </div>
 
@@ -94,22 +101,23 @@
                     </th>
                     <th>
                         @foreach ($users as $key => $value)
-                            @if ($key == $task->team_lead_id)
+                            @if ($value->id == $task->team_lead_id)
                                 @if ($task->task_taskstatus == 1)
-                                    <span style="color: #CCCCCC">{{ $value }}</span>
+                                    <span style="color: #CCCCCC">{{ $value->firstname }}</span>
                                 @else
-                                    {{ $value }}
+                                    {{ $value->firstname }}
                                 @endif
                             @endif
                         @endforeach
                     </th>
                     <th>
+
                         @foreach ($users as $key => $value)
-                            @if ($key == $task->developer_id)
+                            @if ($value->id == $task->developer_id)
                                 @if ($task->task_taskstatus == 1)
-                                    <span style="color: #CCCCCC">{{ $value }}</span>
+                                    <span style="color: #CCCCCC">{{ $value->firstname }}</span>
                                 @else
-                                    {{ $value }}
+                                    {{ $value->firstname }}
                                 @endif
                             @endif
                         @endforeach

@@ -35,9 +35,9 @@ class TasksController extends Controller
     public function index()
     {
         //dd("aaa");
-        $users = User::select(['id','firstname'])
+        $users = User::all(['id','firstname']);
             //->where('role_id', 0)
-            ->pluck('firstname', 'id');
+            //->pluck('firstname', 'id');
             //->get();
         // $tasks = DB::table('tasks')
         //             ->where("tasks.status", "=", 0)
@@ -47,15 +47,36 @@ class TasksController extends Controller
         //             ->groupBy('users_tasks.task_id', 'tasks.id')
         //             ->get();
 
+//dd($users[3]->firstname);
 
-        $tasks = DB::table('projects')
-            ->LeftJoin('tasks', 'projects.id', '=', 'tasks.project_id')
-            ->LeftJoin('users_tasks', 'tasks.id', '=', 'users_tasks.task_id')
-            ->LeftJoin('clients', 'projects.client_id', '=', 'clients.id')
-            ->select('projects.*', 'tasks.*', 'users_tasks.*', 'clients.*', 'tasks.id as task_taskid', 'tasks.status as task_taskstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
-            ->where("tasks.status", "=", 1 )
-            ->orWhere("tasks.status", "=", 0 )
-            ->paginate(20);
+        $url = \Request::server('REQUEST_URI');
+        //dd($url);
+        if (strpos($url, '?') !== false) {
+            $active_user = explode("?", $url);
+            $active_user = $active_user[1];
+            $tasks = DB::table('projects')
+                ->LeftJoin('tasks', 'projects.id', '=', 'tasks.project_id')
+                ->LeftJoin('users_tasks', 'tasks.id', '=', 'users_tasks.task_id')
+                ->LeftJoin('clients', 'projects.client_id', '=', 'clients.id')
+                ->LeftJoin('users_projects', 'users_projects.project_id', '=', 'projects.id')
+                ->select('projects.*', 'tasks.*', 'users_tasks.*', 'clients.*', 'users_projects.*', 'tasks.id as task_taskid', 'tasks.status as task_taskstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
+                ->where("tasks.status", "=", 1 )
+                ->orWhere("tasks.status", "=", 0 )
+                ->where("users_tasks.developer_id", "=", $active_user)
+                ->orWhere("users_tasks.team_lead_id", "=", $active_user)
+                ->orWhere("users_projects.user_id", "=", $active_user)
+                ->paginate(20);
+        } else {
+            $tasks = DB::table('projects')
+                ->LeftJoin('tasks', 'projects.id', '=', 'tasks.project_id')
+                ->LeftJoin('users_tasks', 'tasks.id', '=', 'users_tasks.task_id')
+                ->LeftJoin('clients', 'projects.client_id', '=', 'clients.id')
+                ->select('projects.*', 'tasks.*', 'users_tasks.*', 'clients.*', 'tasks.id as task_taskid', 'tasks.status as task_taskstatus', 'projects.descriptive_title as proj_desc_title', 'projects.project_url as proj_url')
+                ->where("tasks.status", "=", 1 )
+                ->orWhere("tasks.status", "=", 0 )
+                ->paginate(20);
+        }
+
 
         //dd($tasks);
 

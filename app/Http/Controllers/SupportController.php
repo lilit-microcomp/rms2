@@ -34,10 +34,11 @@ class SupportController extends Controller
      */
     public function index()
     {
-        $users = User::select(['id','firstname'])
-            //->where('role_id', 0)
-            ->pluck('firstname', 'id');
 
+        /*$users = User::select(['id','firstname'])
+            //->where('role_id', 0)
+            ->pluck('firstname', 'id');*/
+        $users = User::all(['id','firstname']);
 
         /*$support = DB::table('projects')
                     ->LeftJoin('support', 'projects.id', '=', 'support.project_id')
@@ -45,12 +46,29 @@ class SupportController extends Controller
                     ->where("support.status", "=", 0)
                     ->select('projects.*', 'support.*', 'support.id as support_supportid', 'users_support.*')
                     ->paginate(20);*/
-        $support = DB::table('support')
-                    ->LeftJoin('users_support', 'support.id', '=', 'users_support.support_id')
-                    ->where("support.status", "=", 1)
-                    ->orWhere("support.status", "=", 0 )
-                    ->select('support.*', 'support.id as support_supportid', 'users_support.*', 'support.status as supp_suppstatus')
-                    ->paginate(20);
+        $url = \Request::server('REQUEST_URI');
+        //dd($url);
+        if (strpos($url, '?') !== false) {
+            $active_user = explode("?", $url);
+            $active_user = $active_user[1];
+            $support = DB::table('support')
+                ->LeftJoin('users_support', 'support.id', '=', 'users_support.support_id')
+                ->where("support.status", "=", 1)
+                ->orWhere("support.status", "=", 0 )
+                ->where("users_support.developer_id", "=", $active_user)
+                ->orWhere("users_support.team_lead_id", "=", $active_user)
+                ->orWhere("users_support.pm_id", "=", $active_user)
+                ->select('support.*', 'support.id as support_supportid', 'users_support.*', 'support.status as supp_suppstatus')
+                ->paginate(20);
+        } else {
+            $support = DB::table('support')
+                ->LeftJoin('users_support', 'support.id', '=', 'users_support.support_id')
+                ->where("support.status", "=", 1)
+                ->orWhere("support.status", "=", 0 )
+                ->select('support.*', 'support.id as support_supportid', 'users_support.*', 'support.status as supp_suppstatus')
+                ->paginate(20);
+        }
+
 //dd($support);
         $users_projects = DB::table('users_projects')
                         ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
