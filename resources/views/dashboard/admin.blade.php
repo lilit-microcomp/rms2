@@ -140,6 +140,67 @@
         border: 1px solid #888;
         width: 50%;
     }
+
+    /* start tasks filter */
+    #tasksInput {
+        background-image: url('/img/searchicon.png');
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+    #tasksTable {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ddd;
+        font-size: 18px;
+    }
+    #tasksTable th, #tasksTable td {
+        text-align: left;
+        padding: 12px;
+    }
+    #tasksTable tr {
+        border-bottom: 1px solid #ddd;
+    }
+    #tasksTable tr.tasksHeader, #tasksTable tr:hover {
+        background-color: #f1f1f1;
+    }
+    /* end tasks filter */
+
+
+
+
+    /* start supports filter */
+    #supportsInput {
+        background-image: url('/img/searchicon.png');
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        width: 100%;
+        font-size: 16px;
+        padding: 12px 20px 12px 40px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+    #supportsTable {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ddd;
+        font-size: 18px;
+    }
+    #supportsTable th, #supportsTable td {
+        text-align: left;
+        padding: 12px;
+    }
+    #supportsTable tr {
+        border-bottom: 1px solid #ddd;
+    }
+    #supportsTable tr.supportsHeader, #supportsTable tr:hover {
+        background-color: #f1f1f1;
+    }
+    /* start supports filter */
 </style>
 
 @section('content')
@@ -178,11 +239,11 @@
 
         <div style="margin-bottom: 20px; margin-top: 20px;">
             <b style="font-size: 18px; margin-right: 30px;">OPEN TASKS</b>
-            {!! Form::text('name') !!}
-        </div>
+            <input type="text" id="tasksInput" onkeyup="tasksSearchFunction()" placeholder="Search for project name.." title="Type in a projec name">
 
-        <table style="width: 100%;">
-            <tr>
+        </div>
+        <table id="tasksTable" style="width: 100%;">
+            <tr class="tasksHeader">
                 <td><b>Project</b></td>
                 <td><b>Due Date</b></td>
                 <td><b>Developer</b></td>
@@ -319,11 +380,11 @@
 
         <div style="margin-bottom: 20px; margin-top: 20px;">
             <b style="font-size: 18px; margin-right: 30px;">SUPPORT</b>
-            {!! Form::text('name') !!}
+            <input type="text" id="supportsInput" onkeyup="supportsSearchFunction()" placeholder="Search for project url.." title="Type in a project url">
         </div>
 
-        <table style="width: 100%;">
-            <tr>
+        <table id="supportsTable" style="width: 100%;">
+            <tr class="supportsHeader">
                 <td><b>URL</b></td>
                 <td><b>Developer</b></td>
                 <td><b>To Do</b></td>
@@ -424,6 +485,48 @@
 
 
 <script>
+
+    /* start tasks filter */
+    function tasksSearchFunction() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("tasksInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tasksTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    /* end tasks filter */
+
+
+
+    /* start supports filter */
+    function supportsSearchFunction() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("supportsInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("supportsTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    /* end supports filter */
 
 /*
     // Add active class to the current button (highlight it)

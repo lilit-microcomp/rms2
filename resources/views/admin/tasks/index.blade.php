@@ -7,7 +7,7 @@
 <script type="text/javascript" src="{!! URL::asset('js/admin/tasks/index.js') !!}"></script>
 
 @section('content')
-barev
+
     <div class="row">
         <div class="col-lg-12">
             <h3>Tasks list</h3>
@@ -70,12 +70,12 @@ barev
                     @endif
                     <td>
                         @if ($task->task_taskstatus == 1)
-                            <a href="{{ route('tasks.edit', $task->task_taskid) }}">
+                            <a href="{{ route('tasks.show', $task->task_taskid) }}">
                                 <span style="color: #CCCCCC">{!! $task->proj_desc_title !!}</span>
                             </a>
                             <span style="color: #CCCCCC"><a href="//{{$task->proj_url}}" target="_blank"> {!! $task->proj_url !!}</a></span>
                         @else
-                            <a href="{{ route('tasks.edit', $task->task_taskid) }}">
+                            <a href="{{ route('tasks.show', $task->task_taskid) }}">
                                 {!! $task->proj_desc_title !!}<br>
                             </a>
                             <a href="//{{$task->proj_url}}" target="_blank">{!! $task->proj_url !!}</a>

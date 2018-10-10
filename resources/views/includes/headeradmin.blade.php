@@ -19,8 +19,13 @@ header for admin
             <a href="/"><img src="{{URL::asset('/img/home_dashboard.png')}}" alt="project url" style="margin-left: 40px; margin-right: 10px; margin-top: -5px;"></a>
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="{{ route('users.index') }}">Clients <!--<span class="sr-only">(current)</span>--></a>
+                <a class="nav-link" href="{{ route('users.index') }}">Users <!--<span class="sr-only">(current)</span>--></a>
               </li>
+                @if(Auth::user()->role_id == 1)
+                  <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('clients.index') }}">Clients <!--<span class="sr-only">(current)</span>--></a>
+                  </li>
+                @endif
               <li class="nav-item">
                   <a class="nav-link" href="{{ route('projects.index') }}">  Projects<span class="dropdown-toggle" style="font-size: 14px; color: black; margin-left: 5px;"></span></a>
                   <ul>

@@ -24,7 +24,7 @@ class CreateSupportTable extends Migration
             $table->tinyInteger('send_email_notification')->default(0);
             $table->integer('status')->default(0);
             $table->text('files')->nullable();
-            $table->text('searchable_words');
+            //$table->text('searchable_words');
             $table->timestamps();
         });
     }

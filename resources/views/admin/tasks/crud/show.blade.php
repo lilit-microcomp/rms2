@@ -122,13 +122,11 @@
 
 
 
-        @if ($projects[0]->project_url == null)
+
             <i class="fa fa-plus-square-o" id="myBtn2"></i>
-
-        @else
-            <a href="//{{$projects[0]->project_url}}" target="_blank" class="fa fa-cogs"></a>
+        @if ($projects[0]->project_url_test != null)
+            <a href="//{{$projects[0]->project_url_test}}" target="_blank" class="fa fa-cogs"></a>
         @endif
-
         <!-- The Modal2 -->
         <div id="myModal2" class="modal2">
 
@@ -143,8 +141,8 @@
                     <label for="project_url" class="col-md-4 col-form-label text-md-right">Project Url</label>
 
                     <div class="col-md-6">
-                        {!! Form::textarea('project_url', null, array('size' => '30x5', 'class' => 'form-control', 'id' => 'project_url') ) !!}
-                        @if ($errors->has('project_url'))
+                        {!! Form::textarea('project_url_test', null, array('size' => '30x5', 'class' => 'form-control', 'id' => 'project_url') ) !!}
+                        @if ($errors->has('project_url_test'))
                             <span class="invalid-feedback">
                                     <strong>{{ $errors->first('project_url') }}</strong>
                                 </span>

@@ -34,6 +34,8 @@ Route::resource('tasks','TasksController');
 Route::resource('support','SupportController');
 Route::resource('thirdparty','ThirdPartyController');
 Route::resource('comments','CommentsController');
+Route::resource('clients', 'ClientsController');
+
 Route::get('tasks/{id}/user', 'TasksController@userTasks');
 Route::post('tasks/{id}/save', 'TasksController@saveComment')->name('tasks.saveComment');
 Route::get('support/{id}/user', 'SupportController@userSupport');

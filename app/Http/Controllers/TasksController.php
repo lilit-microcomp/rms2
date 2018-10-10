@@ -121,7 +121,7 @@ class TasksController extends Controller
             'client_id'     => 'required',
             'project_id'    => 'required',
             'developer_id'  => 'required',
-            'team_lead_id'  => 'required',
+            //'team_lead_id'  => 'required',
             'due_date'      => 'required',
             'description'   => 'required',
             'duration'      => 'required',
@@ -393,6 +393,17 @@ if (isset($access_data) && !empty($access_data[0])) {
      */
     public function update(Request $request, $id)
     {
+
+        request()->validate([
+            'client_id'     => 'required',
+            'project_id'    => 'required',
+            'developer_id'  => 'required',
+            //'team_lead_id'  => 'required',
+            'due_date'      => 'required',
+            'description'   => 'required',
+            'duration'      => 'required',
+
+        ]);
         $request = $request->all();
         //$aa = $request['project_id'];
         //dd($request);
@@ -688,7 +699,7 @@ if (isset($access_data) && !empty($access_data[0])) {
             ->where('id', $project[0]->id)
             ->update(array(
                 //'project_id' => $request['project_id'],
-                'project_url' => $request['project_url'],
+                'project_url_test' => $request['project_url_test'],
             ));
 
         return back();
