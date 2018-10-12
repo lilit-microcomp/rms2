@@ -77,6 +77,8 @@ Route::post('fileUploadSuppDash/{supp_id}', ['as'=>'fileUploadSuppDash','uses'=>
 
 //Route::get('/fileUpload/{tasks_id}', 'TasksController@someMethod');
 
+Route::post('fileUploadTaskList/{task_id}', ['as'=>'fileUploadTaskList','uses'=>'TasksController@fileUploadTaskList']);
+
 
 
 

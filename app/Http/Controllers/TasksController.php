@@ -734,4 +734,36 @@ if (isset($access_data) && !empty($access_data[0])) {
     }
 
 
+
+
+    public function fileUploadTaskList(Request $request, $task_id) {
+//dd($task_id);
+        $image = $request->file('image');
+        //$value = Session::get('_previous')['url'];
+        //$value = (explode("/",$value));
+
+        //$task_id = (int)$value[4];
+
+        $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
+
+        $destinationPath = public_path('/images/task');
+
+        $image->move($destinationPath, $input['imagename']);
+
+        $files = DB::table('tasks')
+            ->where('id', $task_id)
+            ->select('files')
+            ->get();
+
+        DB::table('tasks')
+            ->where('id', $task_id)
+            ->update(array(
+                'files' => $files[0]->files . "," . $input['imagename'],
+            ));
+
+        return back()->with('success','Image Upload successful');
+
+    }
+
+
 }

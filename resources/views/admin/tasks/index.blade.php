@@ -1,7 +1,59 @@
 @extends( (Auth::user()->role_id == 1) ? 'layouts.appadmin' : 'layouts.app')
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<style>
+    .btn {
+        display: inline-block;
+    }
+    .popup {
+        position: fixed;
+        padding: 10px;
+        max-width: 500px;
+        border-radius: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background: rgba(255,255,255,.9);
+        visibility: hidden;
+        opacity: 0;
+        /* "delay" the visibility transition */
+        -webkit-transition: opacity .5s, visibility 0s linear .5s;
+        transition: opacity .5s, visibility 0s linear .5s;
+        z-index: 1;
+    }
+    .popup:target {
+        visibility: visible;
+        opacity: 1;
+        /* cancel visibility transition delay */
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+    }
+
+
+    .close-popup {
+        background: rgba(0,0,0,.7);
+        cursor: default;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        visibility: hidden;
+        /* "delay" the visibility transition */
+        -webkit-transition: opacity .5s, visibility 0s linear .5s;
+        transition: opacity .5s, visibility 0s linear .5s;
+    }
+    .popup:target + .close-popup{
+        opacity: 1;
+        visibility: visible;
+        /* cancel visibility transition delay */
+        -webkit-transition-delay: 0s;
+        transition-delay: 0s;
+    }
+</style>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="{!! URL::asset('js/admin/tasks/index.js') !!}"></script>
@@ -147,6 +199,54 @@
                                 <input type="submit" value="&#xf1f8" class="fa fa-trash" style="color: red; font-size: 18px; margin-bottom: 0;">
                             {!! Form::close() !!}
                         @endif
+
+                        <a href="#popupDownload{{$task->task_id}}" class="btn">
+                            <img src="{{URL::asset('img/downloadFile.png')}}" alt="profile Pic" height="40px" width="40px">
+                        <!--<i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>-->
+                        </a>
+
+
+
+
+                        <div id="popupDownload{{$task->task_id}}" class="popup">
+
+                            {!! Form::open(array('route' => ['fileUploadTaskList', $task->task_id],'enctype' => 'multipart/form-data')) !!}
+                            <div class=" cancel"> <!-- row -->
+                                <div class="col-md-4">
+                                    {!! Form::file('image', array('class' => 'image')) !!}
+                                </div><br>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-success">Upload</button>
+                                </div>
+                            </div>
+                            {!! Form::close() !!}
+                        </div>
+                        <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+
+
+
+
+
+
+
+
+                        <a href="#popupDownload{{$task->task_id}}" class="btn">
+                            <img src="{{URL::asset('img/uploadFile.png')}}" alt="profile Pic" height="40px" width="40px">
+                        </a>
+                        <div id="popupDownload{{$task->task_id}}" class="popup">
+
+                        </div>
+                        <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+
+
+
+
+
+
+
+
+                        <img src="{{URL::asset('img/accessData.png')}}" alt="profile Pic" height="40px" width="40px">
+
                     </td>
                 </tr>
             @endforeach
