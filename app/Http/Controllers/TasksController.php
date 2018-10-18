@@ -76,15 +76,27 @@ class TasksController extends Controller
                 ->orWhere("tasks.status", "=", 0 )
                 ->paginate(20);
         }
+        if (strpos(\Request::server('REQUEST_URI'), 'popupDownload') !== false) {
+            $url = explode("popupDownload",$url);
+            $url = $url[1];
+            dd($url);
 
+        }
 
         //dd($tasks);
+
+
+        //$this->fileDownloadTaskList();
+
+
 
         $users_projects = DB::table('users_projects')
             ->LeftJoin('users', 'users.id', '=', 'users_projects.user_id')
             ->get();
 
         //dd($users);
+
+
 
         return view('admin.tasks.index', compact('tasks', 'users', 'users_projects'))
             ->with('i',(request()->input('page',1)-1) *20);
@@ -763,6 +775,22 @@ if (isset($access_data) && !empty($access_data[0])) {
 
         return back()->with('success','Image Upload successful');
 
+    }
+
+
+
+    public function fileDownloadTaskList(Request $request, $task_id) {
+
+        /*$task_files = DB::table('tasks')
+            ->where('id', $task_id)
+            ->select('files')
+            ->get();
+
+
+        $task_files = (explode(",", $task_files[0]->files));
+        unset($task_files[0]);
+
+        return back()->with('success','Image Upload successful');*/
     }
 
 

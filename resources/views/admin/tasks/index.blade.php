@@ -200,7 +200,7 @@
                             {!! Form::close() !!}
                         @endif
 
-                        <a href="#popupDownload{{$task->task_id}}" class="btn">
+                        <a href="#popupUpload{{$task->task_id}}" class="btn">
                             <img src="{{URL::asset('img/downloadFile.png')}}" alt="profile Pic" height="40px" width="40px">
                         <!--<i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>-->
                         </a>
@@ -208,7 +208,7 @@
 
 
 
-                        <div id="popupDownload{{$task->task_id}}" class="popup">
+                        <div id="popupUpload{{$task->task_id}}" class="popup">
 
                             {!! Form::open(array('route' => ['fileUploadTaskList', $task->task_id],'enctype' => 'multipart/form-data')) !!}
                             <div class=" cancel"> <!-- row -->
@@ -234,6 +234,18 @@
                             <img src="{{URL::asset('img/uploadFile.png')}}" alt="profile Pic" height="40px" width="40px">
                         </a>
                         <div id="popupDownload{{$task->task_id}}" class="popup">
+
+
+
+
+                            <div class=" cancel"> <!-- row -->
+                                <div class="col-md-12">
+test
+                                </div>
+                            </div>
+
+
+
 
                         </div>
                         <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>

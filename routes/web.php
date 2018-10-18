@@ -80,6 +80,9 @@ Route::post('fileUploadSuppDash/{supp_id}', ['as'=>'fileUploadSuppDash','uses'=>
 Route::post('fileUploadTaskList/{task_id}', ['as'=>'fileUploadTaskList','uses'=>'TasksController@fileUploadTaskList']);
 
 
+Route::post('fileDownloadTaskList/{task_id}', ['as'=>'fileDownloadTaskList','uses'=>'TasksController@fileDownloadTaskList']);
+
+
 
 
 

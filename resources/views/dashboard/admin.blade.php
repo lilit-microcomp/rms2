@@ -255,72 +255,80 @@
                     <td>{{ $task->task_due_date }}</td>
                     <td>{{ $task->firstname }}</td>
                     <td>
+                        <table>
+                            <tr>
+                                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 4)
 
-                        @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 4)
-                            <a href="{{ route('tasks.edit', $task->id) }}">
-                                <i class="fa fa-edit" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
-                            </a>
-                        @endif
-                        <!--<div class="clicker" tabindex="1" style="float: left; margin-left: 2px;"><i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i></div>-->
-                            <a href="#popup{{$task->id}}" class="btn" style="float: left; margin-left: -10px; margin-right: -10px; margin-top: -6px;">
-                                <i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>
-                            </a>
-                            <div id="popup{{$task->id}}" class="popup">
-                                {!! Form::open(array('route' => ['fileUploadTaskDash', $task->id],'enctype' => 'multipart/form-data')) !!}
+                                    <td>
+                                        <a href="{{ route('tasks.edit', $task->id) }}">
+                                            <i class="fa fa-edit" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
+                                        </a>
+                                    </td>
+                                @endif
+
+                                <td>
+                                    <a href="#popup{{$task->id}}" class="btn" style="float: left; margin-left: -30px; margin-right: -10px;">
+                                        <i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>
+                                    </a>
+                                    <div id="popup{{$task->id}}" class="popup">
+                                        {!! Form::open(array('route' => ['fileUploadTaskDash', $task->id],'enctype' => 'multipart/form-data')) !!}
 
 
 
-                                <div class=" cancel"> <!-- row -->
-                                    <div class="col-md-4">
-                                        {!! Form::file('image', array('class' => 'image')) !!}
-                                    </div><br>
-                                    <div class="col-md-4">
-                                        <button type="submit" class="btn btn-success">Upload</button>
+                                        <div class=" cancel"> <!-- row -->
+                                            <div class="col-md-4">
+                                                {!! Form::file('image', array('class' => 'image')) !!}
+                                            </div><br>
+                                            <div class="col-md-4">
+                                                <button type="submit" class="btn btn-success">Upload</button>
+                                            </div>
+                                        </div>
+                                        {!! Form::close() !!}
                                     </div>
-                                </div>
-                                {!! Form::close() !!}
-                            </div>
-                            <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+                                    <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+                                </td>
+                                <td>
+                                    <a href="#popupUpload{{$task->task_taskid}}" class="btn" style="float: left; margin-left: -30px;">
+                                        <i class="fa fa-download" style="font-size: 12px; color: #007bff; cursor: pointer;" title="show access data"></i>
+                                        <!--<i class="fa fa-upload" style="font-size: 12px; color: #007bff; cursor: pointer;" title="file upload"></i>-->
+                                    </a>
+                                    <div id="popupUpload{{$task->task_id}}" class="popup">
+                                        <?php
+                                        //echo $tasks[1]->files;
+                                        $task_files = (explode(",", $task->files));
+                                        unset($task_files[0]);
+                                        ?>
+                                        @foreach ($task_files as $task_file)
+                                            <a href="/images/{!! $task_file !!}" download> <p style="color: #007bff">{!! $task_file !!}</p> </a>
+                                        @endforeach
+                                    </div>
+                                    <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+                                </td>
+                                <td>
+                                    <a href="#popupAccess{{$task->task_taskid}}" class="btn" style="float: left; margin-left: -40px;">
+                                        <i class="fa fa-key" style="font-size: 12px; color: #007bff; cursor: pointer;" title="show access data"></i>
+                                    </a>
+                                    <div id="popupAccess{{$task->task_id}}" class="popup">
+                                        {!! $task->access_data !!}
+                                    </div>
+                                    <a href="#" class="close-popup" style="float: right; color: white; text-decoration: none; cursor:pointer;"><h3>x</h3></a>
+                                </td>
+                                <td>
+                                    <a href="/home/{{$task->task_taskid}}/finished" style="float: left; margin-left: -30px;">
+                                        @if ($task->task_status == 0)
+                                            <i class="fa fa-close" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
+                                        @else
+                                            <i class="fa fa-check" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
+                                        @endif
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
 
 
 
 
 
-
-                        <!--<div class="hiddendiv"><div class="sub">
-
-
-
-                        </div></div>-->
-
-                         <div class="clicker" tabindex="1" style="float: left; margin-left: 2px;"><i class="fa fa-download" style="font-size: 12px; color: #007bff; cursor: pointer;" title="show access data"></i></div>
-                         <div class="hiddendiv"><div class="sub">
-                                 <?php
-                                 //echo $tasks[1]->files;
-                                 $task_files = (explode(",", $task->files));
-                                 unset($task_files[0]);
-                                 ?>
-                                     @foreach ($task_files as $task_file)
-                                         <a href="/images/{!! $task_file !!}" download> <p style="color: #007bff">{!! $task_file !!}</p> </a>
-                                     @endforeach
-                         </div></div>
-
-
-
-
-
-
-                        <!-- Trigger/Open The Modal -->
-
-                        <div class="clicker" tabindex="1" style="float: left; margin-left: 2px;"><i class="fa fa-key" style="font-size: 12px; color: #007bff; cursor: pointer;" title="show access data"></i></div>
-                        <div class="hiddendiv"><div class="sub">{!! $task->access_data !!}</div></div>
-                        <a href="/home/{{$task->task_taskid}}/finished">
-                        @if ($task->task_status == 0)
-                                <i class="fa fa-close" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
-                        @else
-                                <i class="fa fa-check" style="font-size: 12px; color: #007bff; float: left; margin-left: 2px;"></i>
-                        @endif
-                        </a>
 
 
 
